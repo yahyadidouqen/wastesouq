@@ -1,14 +1,6 @@
-# Dépendances (les plus lourds)
 node_modules/
 client/node_modules/
 server/node_modules/
-
-# Environnement (sécurité)
 .env
-
-# Build et dossiers temporaires
-dist/
-.DS_Store
-
-# Uploads (pour ne pas saturer Git avec tes photos de test)
 server/uploads/
+dist/
