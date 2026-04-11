@@ -1,11 +1,12 @@
 import { useState } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 import ProgressBar from "../components/ProgressBar";
 import ListingForm from "../components/ListingForm";
 
 export default function PublishPage() {
   const [loading, setLoading] = useState(false);
-  const [toast, setToast] = useState(null); // { type: 'success' | 'error', message }
+  const [toast, setToast] = useState(null);
 
   const showToast = (type, message) => {
     setToast({ type, message });
@@ -28,7 +29,7 @@ export default function PublishPage() {
   };
 
   return (
-    <div className="min-h-screen bg-[#D8F3DC] py-8 px-4">
+    <div className="min-h-screen py-8 px-4" style={{ background: "linear-gradient(160deg, #0a2e1a 0%, #1B4332 50%, #2d6a4f 100%)" }}>
       {/* Toast */}
       {toast && (
         <div className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 px-6 py-4 rounded-2xl shadow-xl text-white font-semibold text-sm transition-all
@@ -40,20 +41,23 @@ export default function PublishPage() {
       <div className="max-w-lg mx-auto">
         {/* Header */}
         <div className="text-center mb-6">
-          <h1 className="text-3xl font-extrabold text-[#1B4332]">♻️ WasteSouq</h1>
-          <p className="text-sm text-gray-500 mt-1">Transformez vos déchets en valeur</p>
+          <h1 className="text-3xl font-extrabold text-white">♻️ WasteSouq</h1>
+          <p className="text-sm text-white/60 mt-1">Transformez vos déchets en valeur</p>
+          <Link to="/annonces" className="inline-block mt-2 text-xs text-white underline font-medium">
+            👀 Voir toutes les annonces →
+          </Link>
         </div>
 
         <ProgressBar currentStep={1} />
 
         <div className="mb-4">
-          <h2 className="text-xl font-bold text-[#1B4332]">Publier une annonce</h2>
-          <p className="text-sm text-gray-500">Remplissez les informations sur votre matière recyclable</p>
+          <h2 className="text-xl font-bold text-white">Publier une annonce</h2>
+          <p className="text-sm text-white/60">Remplissez les informations sur votre matière recyclable</p>
         </div>
 
         <ListingForm onSubmit={handleSubmit} loading={loading} />
 
-        <p className="text-center text-xs text-gray-400 mt-6">
+        <p className="text-center text-xs text-white/30 mt-6">
           WasteSouq · La marketplace marocaine du recyclage
         </p>
       </div>
