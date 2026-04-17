@@ -1,12 +1,20 @@
-import { useState } from "react";
-import axios from "axios";
-import { Link } from "react-router-dom";
+
+import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import api from "../api/axios";
 import ProgressBar from "../components/ProgressBar";
 import ListingForm from "../components/ListingForm";
 
 export default function PublishPage() {
+  const { user, isLoading } = useAuth();
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [toast, setToast] = useState(null);
+
+  useEffect(() => {
+    if (!isLoading && !user) navigate("/login");
+  }, [user, isLoading]);
 
   const showToast = (type, message) => {
     setToast({ type, message });
@@ -16,7 +24,7 @@ export default function PublishPage() {
   const handleSubmit = async (formData) => {
     setLoading(true);
     try {
-      await axios.post("http://localhost:5000/api/listings", formData, {
+      await api.post("/api/listings", formData, {
         headers: { "Content-Type": "multipart/form-data" },
       });
       showToast("success", "✅ Votre annonce a été publiée avec succès !");
@@ -27,6 +35,13 @@ export default function PublishPage() {
       setLoading(false);
     }
   };
+
+  if (isLoading) return (
+    <div className="min-h-screen flex items-center justify-center"
+      style={{ background: "linear-gradient(160deg, #0a2e1a 0%, #1B4332 50%, #2d6a4f 100%)" }}>
+      <div className="text-white text-xl font-bold animate-pulse">Chargement...</div>
+    </div>
+  );
 
   return (
     <div className="min-h-screen py-8 px-4"
@@ -40,10 +55,15 @@ export default function PublishPage() {
       <div className="max-w-lg mx-auto">
         <div className="text-center mb-6">
           <h1 className="text-3xl font-extrabold text-white">♻️ WasteSouq</h1>
-          <p className="text-sm text-white/60 mt-1">Transformez vos déchets en valeur</p>
-          <Link to="/annonces" className="inline-block mt-2 text-xs text-[#F4A261] underline font-medium">
-            👀 Voir toutes les annonces →
-          </Link>
+          <p className="text-sm text-white/60 mt-1">Bonjour {user?.name?.split(" ")[0]} 👋</p>
+          <div className="flex items-center justify-center gap-4 mt-2">
+            <Link to="/annonces" className="text-xs text-[#F4A261] underline font-medium">
+              👀 Voir les annonces
+            </Link>
+            <Link to="/dashboard" className="text-xs text-[#F4A261] underline font-medium">
+              📊 Mon dashboard
+            </Link>
+          </div>
         </div>
         <ProgressBar currentStep={1} />
         <div className="mb-4">

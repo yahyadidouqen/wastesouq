@@ -19,6 +19,7 @@ const ListingSchema = new mongoose.Schema({
     whatsapp: { type: Boolean, default: false },
   },
   status: { type: String, enum: ["active","sold","expired"], default: "active" },
+  seller: { type: mongoose.Schema.Types.ObjectId, ref: "User", default: null },
   createdAt: { type: Date, default: Date.now },
 });
 
