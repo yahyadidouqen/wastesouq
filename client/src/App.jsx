@@ -8,6 +8,7 @@ import RegisterPage from "./pages/RegisterPage";
 import DashboardPage from "./pages/DashboardPage";
 import BuyerProfilePage from "./pages/BuyerProfilePage";
 import MatchesPage from "./pages/MatchesPage";
+import AuthCallbackPage from "./pages/AuthCallbackPage";
 
 export default function App() {
   return (
@@ -22,6 +23,7 @@ export default function App() {
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/buyer-profile" element={<BuyerProfilePage />} />
           <Route path="/matches" element={<MatchesPage />} />
+          <Route path="/auth/callback" element={<AuthCallbackPage />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>
