@@ -15,7 +15,10 @@ export function AuthProvider({ children }) {
     window.__accessToken = token;
   };
 
+<<<<<<< HEAD
   // Auto-refresh token 1 min before expiry (every 14 min)
+=======
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
   const startRefreshTimer = () => {
     if (refreshInterval.current) clearInterval(refreshInterval.current);
     refreshInterval.current = setInterval(async () => {
@@ -29,7 +32,11 @@ export function AuthProvider({ children }) {
     }, 14 * 60 * 1000);
   };
 
+<<<<<<< HEAD
   // On app load — try to restore session silently
+=======
+  // Restore session on app load
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
   useEffect(() => {
     const restoreSession = async () => {
       try {
@@ -64,6 +71,16 @@ export function AuthProvider({ children }) {
     return res.data;
   };
 
+<<<<<<< HEAD
+=======
+  // Called after Google OAuth redirect
+  const setUserFromGoogle = ({ token, user: googleUser }) => {
+    storeToken(token);
+    setUser(googleUser);
+    startRefreshTimer();
+  };
+
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
   const logout = async () => {
     try { await api.post("/api/auth/logout"); } catch {}
     setUser(null);
@@ -72,7 +89,15 @@ export function AuthProvider({ children }) {
   };
 
   return (
+<<<<<<< HEAD
     <AuthContext.Provider value={{ user, accessToken, isLoading, isAuthenticated: !!user, login, logout, register }}>
+=======
+    <AuthContext.Provider value={{
+      user, accessToken, isLoading,
+      isAuthenticated: !!user,
+      login, logout, register, setUserFromGoogle,
+    }}>
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
       {children}
     </AuthContext.Provider>
   );

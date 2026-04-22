@@ -211,6 +211,14 @@ export default function BrowsePage() {
 
       {/* Floating buttons */}
       <div className="fixed bottom-6 right-6 z-50 flex flex-col gap-3">
+<<<<<<< HEAD
+=======
+        <button onClick={() => navigate("/matches")}
+          className="flex items-center gap-2 px-5 py-3.5 rounded-2xl text-white font-bold shadow-2xl transition-all hover:scale-105 active:scale-95"
+          style={{ background: "linear-gradient(135deg, #7C3AED, #6d28d9)" }}>
+          🎯 Mes Matches
+        </button>
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
         <button onClick={() => navigate("/dashboard")}
           className="flex items-center gap-2 px-5 py-3.5 rounded-2xl text-white font-bold shadow-2xl transition-all hover:scale-105 active:scale-95"
           style={{ background: "linear-gradient(135deg, #1B4332, #2d6a4f)" }}>
