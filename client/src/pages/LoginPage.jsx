@@ -24,8 +24,12 @@ export default function LoginPage() {
     if (!form.email || !form.password) { setError("Veuillez remplir tous les champs."); return; }
     setLoading(true);
     try {
-      await login(form.email, form.password);
-      navigate("/annonces");
+      const res = await login(form.email, form.password);
+      if (res.mfaRequired) {
+        navigate("/verify-otp", { state: { userId: res.userId, email: form.email } });
+      } else {
+        navigate("/annonces");
+      };
     } catch (err) {
       setError(err.response?.data?.message || "Erreur de connexion.");
     } finally {

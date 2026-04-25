@@ -13,6 +13,13 @@ const UserSchema = new mongoose.Schema({
   isVerified: { type: Boolean, default: false },
   loginAttempts: { type: Number, default: 0 },
   lockUntil: { type: Date, default: null },
+
+  // MFA fields
+  mfaEnabled: { type: Boolean, default: false },
+  otpCode: { type: String, default: null },         // hashed OTP
+  otpExpires: { type: Date, default: null },         // OTP expiry
+  otpAttempts: { type: Number, default: 0 },        // wrong OTP attempts
+
   createdAt: { type: Date, default: Date.now },
 });
 

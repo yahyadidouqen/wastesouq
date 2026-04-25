@@ -50,15 +50,11 @@ function ListingCard({ listing, onStatusChange, onDelete }) {
   const icon = MATERIAL_ICONS[listing.materialType] || "♻️";
   const status = STATUS_CONFIG[listing.status] || STATUS_CONFIG.active;
   const date = new Date(listing.createdAt).toLocaleDateString("fr-FR", { day: "numeric", month: "short", year: "numeric" });
-  const [menuOpen, setMenuOpen] = useState(false);
 
   return (
     <div className="bg-white rounded-3xl shadow-md overflow-hidden hover:shadow-xl transition-all duration-300">
-      {/* Color bar */}
       <div className="h-1.5" style={{ background: `linear-gradient(90deg, ${color}, ${color}66)` }} />
-
       <div className="p-5">
-        {/* Header */}
         <div className="flex items-start justify-between gap-3 mb-4">
           <div className="flex items-center gap-3">
             <div className="w-12 h-12 rounded-2xl flex items-center justify-center text-2xl"
@@ -72,17 +68,11 @@ function ListingCard({ listing, onStatusChange, onDelete }) {
               <p className="text-gray-400 text-xs mt-0.5">📍 {listing.location?.city} · {date}</p>
             </div>
           </div>
-
-          {/* Status badge */}
-          <div className="flex items-center gap-2">
-            <span className="px-3 py-1 rounded-full text-xs font-bold border"
-              style={{ color: status.color, background: status.bg, borderColor: status.border }}>
-              {status.label}
-            </span>
-          </div>
+          <span className="px-3 py-1 rounded-full text-xs font-bold border"
+            style={{ color: status.color, background: status.bg, borderColor: status.border }}>
+            {status.label}
+          </span>
         </div>
-
-        {/* Stats */}
         <div className="grid grid-cols-2 gap-2 mb-4">
           <div className="bg-gray-50 rounded-2xl p-3">
             <p className="text-gray-400 text-xs mb-0.5">Quantité</p>
@@ -93,14 +83,10 @@ function ListingCard({ listing, onStatusChange, onDelete }) {
             <p className="font-bold text-gray-900 text-sm truncate">{listing.contact?.phone}</p>
           </div>
         </div>
-
         {listing.description && (
           <p className="text-gray-400 text-sm line-clamp-1 mb-4">{listing.description}</p>
         )}
-
-        {/* Actions */}
         <div className="flex gap-2 pt-3 border-t border-gray-100">
-          {/* Mark as sold */}
           {listing.status === "active" && (
             <button onClick={() => onStatusChange(listing._id, "sold")}
               className="flex-1 py-2.5 rounded-2xl text-white text-xs font-bold transition hover:scale-[1.02] active:scale-95"
@@ -115,14 +101,10 @@ function ListingCard({ listing, onStatusChange, onDelete }) {
               🔄 Remettre en ligne
             </button>
           )}
-
-          {/* View */}
           <Link to={`/annonces/${listing._id}`}
             className="px-4 py-2.5 rounded-2xl bg-gray-100 text-gray-600 text-xs font-bold hover:bg-gray-200 transition flex items-center gap-1">
             👁️ Voir
           </Link>
-
-          {/* Delete */}
           <button onClick={() => onDelete(listing._id)}
             className="px-4 py-2.5 rounded-2xl bg-red-50 text-red-500 text-xs font-bold hover:bg-red-100 transition">
             🗑️
@@ -152,6 +134,7 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState("all");
   const [deleteId, setDeleteId] = useState(null);
+  const [mfaEnabled, setMfaEnabled] = useState(false);
   const [toast, setToast] = useState(null);
 
   const showToast = (msg, type = "success") => {
@@ -162,6 +145,17 @@ export default function DashboardPage() {
   useEffect(() => {
     if (!isLoading && !user) navigate("/login");
   }, [user, isLoading]);
+
+  // ✅ Fetch real MFA status from DB
+  useEffect(() => {
+    const fetchMfaStatus = async () => {
+      try {
+        const res = await api.get("/api/auth/me");
+        setMfaEnabled(res.data.user?.mfaEnabled || false);
+      } catch {}
+    };
+    if (user) fetchMfaStatus();
+  }, [user]);
 
   useEffect(() => {
     fetchListings();
@@ -203,6 +197,19 @@ export default function DashboardPage() {
     }
   };
 
+  const handleToggleMFA = async () => {
+    try {
+      const res = await api.post("/api/auth/toggle-mfa");
+      setMfaEnabled(res.data.mfaEnabled);
+      showToast(res.data.message);
+      if (res.data.mfaEnabled) {
+        showToast("🔐 MFA activé ! Regardez votre terminal pour le code de test.", "success");
+      }
+    } catch {
+      showToast("Erreur lors de la modification du MFA.", "error");
+    }
+  };
+
   const handleLogout = async () => {
     await logout();
     navigate("/login");
@@ -227,7 +234,6 @@ export default function DashboardPage() {
       style={{ background: "linear-gradient(160deg, #0a2e1a 0%, #1B4332 50%, #2d6a4f 100%)" }}>
       <style>{`@keyframes fadeUp{from{opacity:0;transform:translateY(16px)}to{opacity:1;transform:translateY(0)}}.fade-up{animation:fadeUp 0.4s ease both}`}</style>
 
-      {/* Toast */}
       {toast && (
         <div className={`fixed top-5 left-1/2 -translate-x-1/2 z-50 px-6 py-3 rounded-2xl shadow-xl text-white font-semibold text-sm transition-all
           ${toast.type === "error" ? "bg-red-500" : "bg-green-600"}`}>
@@ -235,7 +241,6 @@ export default function DashboardPage() {
         </div>
       )}
 
-      {/* Delete confirm modal */}
       {deleteId && (
         <ConfirmModal
           message="Cette annonce sera définitivement supprimée."
@@ -244,7 +249,6 @@ export default function DashboardPage() {
         />
       )}
 
-      {/* Header */}
       <div className="px-5 pt-8 pb-6 max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-2">
           <div>
@@ -258,6 +262,11 @@ export default function DashboardPage() {
               className="px-4 py-2 rounded-2xl bg-white/10 text-white text-xs font-bold border border-white/20 hover:bg-white/20 transition">
               👀 Annonces
             </Link>
+            <button onClick={handleToggleMFA}
+              className={`px-4 py-2 rounded-2xl text-white text-xs font-bold border transition
+                ${mfaEnabled ? "bg-green-500/30 border-green-400 hover:bg-green-500/50" : "bg-white/10 border-white/20 hover:bg-white/20"}`}>
+              🔐 MFA {mfaEnabled ? "ON" : "OFF"}
+            </button>
             <button onClick={handleLogout}
               className="px-4 py-2 rounded-2xl bg-white/10 text-white text-xs font-bold border border-white/20 hover:bg-red-500/50 transition">
               🚪 Déconnexion
@@ -267,15 +276,12 @@ export default function DashboardPage() {
       </div>
 
       <div className="max-w-4xl mx-auto px-4 space-y-6 fade-up">
-
-        {/* Stats */}
         <div className="grid grid-cols-3 gap-3">
           <StatCard label="Total" value={stats.total} icon="📦" color="#1B4332" />
           <StatCard label="En ligne" value={stats.active} icon="✅" color="#16A34A" />
           <StatCard label="Vendues" value={stats.sold} icon="🏷️" color="#D97706" />
         </div>
 
-        {/* Filter tabs + publish button */}
         <div className="flex items-center justify-between gap-3">
           <div className="flex gap-2 bg-white/10 p-1 rounded-2xl border border-white/20">
             {[["all","Toutes"], ["active","En ligne"], ["sold","Vendues"], ["expired","Expirées"]].map(([val, label]) => (
@@ -293,7 +299,6 @@ export default function DashboardPage() {
           </Link>
         </div>
 
-        {/* Listings */}
         {loading ? (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {[...Array(4)].map((_, i) => (

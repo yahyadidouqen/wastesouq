@@ -1,3 +1,4 @@
+
 import { createContext, useContext, useState, useEffect, useRef } from "react";
 import api from "../api/axios";
 import axios from "axios";
@@ -52,14 +53,16 @@ export function AuthProvider({ children }) {
 
   const register = async (name, email, phone, password) => {
     const res = await api.post("/api/auth/register", { name, email, phone, password });
-    return res.data;
+    return res.data; // returns { success, requiresVerification, userId, message }
   };
 
   const login = async (email, password) => {
     const res = await api.post("/api/auth/login", { email, password });
-    storeToken(res.data.accessToken);
-    setUser(res.data.user);
-    startRefreshTimer();
+    if (!res.data.mfaRequired) {
+      storeToken(res.data.accessToken);
+      setUser(res.data.user);
+      startRefreshTimer();
+    }
     return res.data;
   };
 

@@ -27,13 +27,22 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.name || !form.email || !form.phone || !form.password) { setError("Veuillez remplir tous les champs."); return; }
-    if (form.password.length < 8) { setError("Le mot de passe doit contenir au moins 8 caractères."); return; }
-    if (form.password !== form.confirm) { setError("Les mots de passe ne correspondent pas."); return; }
+    if (!form.name || !form.email || !form.phone || !form.password) {
+      setError("Veuillez remplir tous les champs."); return;
+    }
+    if (form.password.length < 8) {
+      setError("Le mot de passe doit contenir au moins 8 caractères."); return;
+    }
+    if (form.password !== form.confirm) {
+      setError("Les mots de passe ne correspondent pas."); return;
+    }
     setLoading(true);
     try {
-      await register(form.name, form.email, form.phone, form.password);
-      navigate("/login", { state: { success: "Compte créé ! Vous pouvez vous connecter." } });
+      const res = await register(form.name, form.email, form.phone, form.password);
+      // Redirect to email verification page
+      navigate("/verify-email", {
+        state: { userId: res.userId, email: form.email }
+      });
     } catch (err) {
       setError(err.response?.data?.message || "Erreur lors de l'inscription.");
     } finally {
@@ -134,6 +143,9 @@ export default function RegisterPage() {
                   placeholder="Répétez le mot de passe"
                   className={`w-full px-4 py-3 rounded-2xl border-2 bg-gray-50 text-sm focus:outline-none focus:border-[#F4A261] transition
                     ${form.confirm && form.confirm !== form.password ? "border-red-300" : "border-gray-100"}`} />
+                {form.confirm && form.confirm !== form.password && (
+                  <p className="text-red-500 text-xs mt-1">Les mots de passe ne correspondent pas.</p>
+                )}
               </div>
               <button type="submit" disabled={loading}
                 className="w-full py-4 rounded-2xl text-white font-bold text-sm shadow-xl transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-60"

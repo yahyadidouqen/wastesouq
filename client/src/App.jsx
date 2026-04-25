@@ -9,6 +9,8 @@ import DashboardPage from "./pages/DashboardPage";
 import BuyerProfilePage from "./pages/BuyerProfilePage";
 import MatchesPage from "./pages/MatchesPage";
 import AuthCallbackPage from "./pages/AuthCallbackPage";
+import OTPPage from "./pages/OTPPage";
+import EmailVerificationPage from "./pages/EmailVerificationPage";
 
 export default function App() {
   return (
@@ -20,6 +22,8 @@ export default function App() {
           <Route path="/annonces/:id" element={<ListingDetailPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/verify-email" element={<EmailVerificationPage />} />
+          <Route path="/verify-otp" element={<OTPPage />} />
           <Route path="/dashboard" element={<DashboardPage />} />
           <Route path="/buyer-profile" element={<BuyerProfilePage />} />
           <Route path="/matches" element={<MatchesPage />} />
