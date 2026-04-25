@@ -17,12 +17,20 @@
     "helmet": "^7.0.0",
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^7.5.0",
+<<<<<<< HEAD
+    "multer": "^1.4.5-lts.1"
+=======
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^8.0.5",
     "passport": "^0.7.0",
     "passport-google-oauth20": "^2.0.0"
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
   },
   "devDependencies": {
     "nodemon": "^3.0.1"
   }
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67

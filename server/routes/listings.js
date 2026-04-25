@@ -1,3 +1,13 @@
+<<<<<<< HEAD
+
+const express = require("express");
+const router = express.Router();
+const Listing = require("../models/Listing");
+const upload = require("../middleware/upload");
+const authenticate = require("../middleware/authenticate");
+
+// POST /api/listings — create listing (authenticated)
+=======
 const express = require("express");
 const router = express.Router();
 const Listing = require("../models/Listing");
@@ -6,6 +16,7 @@ const upload = require("../middleware/upload");
 const authenticate = require("../middleware/authenticate");
 const { findMatches } = require("../utils/matcher");
 
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
 router.post("/", authenticate, upload.single("photo"), async (req, res) => {
   try {
     const { materialType, quantity, unit, city, lat, lng, description, phone, whatsapp } = req.body;
@@ -14,22 +25,35 @@ router.post("/", authenticate, upload.single("photo"), async (req, res) => {
     }
     const listing = new Listing({
       photo: req.file ? `/uploads/${req.file.filename}` : null,
+<<<<<<< HEAD
+      materialType,
+      quantity: Number(quantity),
+      unit,
+=======
       materialType, quantity: Number(quantity), unit,
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
       location: { city, coordinates: { lat: lat ? Number(lat) : null, lng: lng ? Number(lng) : null } },
       description,
       contact: { phone, whatsapp: whatsapp === "true" },
       seller: req.user.userId,
     });
     await listing.save();
+<<<<<<< HEAD
+=======
     findMatches(listing, BuyerProfile).then((matches) => {
       console.log(`✅ ${matches.length} acheteur(s) compatible(s) pour ${listing.materialType}`);
     }).catch(console.error);
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
     res.status(201).json({ success: true, listing });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });
   }
 });
 
+<<<<<<< HEAD
+// GET /api/listings — all active listings (public)
+=======
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
 router.get("/", async (req, res) => {
   try {
     const filter = { status: "active" };
@@ -42,6 +66,10 @@ router.get("/", async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
+// GET /api/listings/my — seller's own listings (authenticated)
+=======
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
 router.get("/my", authenticate, async (req, res) => {
   try {
     const listings = await Listing.find({ seller: req.user.userId }).sort({ createdAt: -1 });
@@ -51,6 +79,10 @@ router.get("/my", authenticate, async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
+// GET /api/listings/:id — single listing (public)
+=======
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
 router.get("/:id", async (req, res) => {
   try {
     const listing = await Listing.findById(req.params.id);
@@ -61,6 +93,10 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
+// PUT /api/listings/:id — update listing (authenticated + owner only)
+=======
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
 router.put("/:id", authenticate, upload.single("photo"), async (req, res) => {
   try {
     const listing = await Listing.findById(req.params.id);
@@ -87,6 +123,10 @@ router.put("/:id", authenticate, upload.single("photo"), async (req, res) => {
   }
 });
 
+<<<<<<< HEAD
+// DELETE /api/listings/:id — delete listing (authenticated + owner only)
+=======
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
 router.delete("/:id", authenticate, async (req, res) => {
   try {
     const listing = await Listing.findById(req.params.id);

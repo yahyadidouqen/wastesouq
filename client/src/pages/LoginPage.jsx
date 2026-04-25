@@ -1,22 +1,33 @@
+<<<<<<< HEAD
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+=======
 import { useState, useEffect } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
 import { useAuth } from "../context/AuthContext";
 
 export default function LoginPage() {
   const { login } = useAuth();
   const navigate = useNavigate();
+<<<<<<< HEAD
+=======
   const [searchParams] = useSearchParams();
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
   const [form, setForm] = useState({ email: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
 
+<<<<<<< HEAD
+=======
   useEffect(() => {
     const err = searchParams.get("error");
     if (err === "google_failed") setError("Connexion Google échouée. Réessayez.");
     if (err === "server_error") setError("Erreur serveur. Réessayez.");
   }, []);
 
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
   const set = (field, value) => { setForm((f) => ({ ...f, [field]: value })); setError(""); };
 
   const handleSubmit = async (e) => {
@@ -37,16 +48,23 @@ export default function LoginPage() {
     }
   };
 
+<<<<<<< HEAD
+=======
   const handleGoogle = () => {
     window.location.href = "http://localhost:5000/api/auth/google";
   };
 
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
   return (
     <div className="min-h-screen flex items-center justify-center px-4 py-12"
       style={{ background: "linear-gradient(160deg, #0a2e1a 0%, #1B4332 50%, #2d6a4f 100%)" }}>
       <style>{`@keyframes fadeUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}.fade-up{animation:fadeUp 0.4s ease both}`}</style>
 
       <div className="w-full max-w-md fade-up">
+<<<<<<< HEAD
+        {/* Logo */}
+=======
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
         <div className="text-center mb-8">
           <h1 className="text-4xl font-black text-white">♻️ Waste<span style={{ color: "#F4A261" }}>Souq</span></h1>
           <p className="text-white/50 text-sm mt-2">Connectez-vous à votre compte</p>
@@ -63,6 +81,8 @@ export default function LoginPage() {
               </div>
             )}
 
+<<<<<<< HEAD
+=======
             {/* Google Button */}
             <button onClick={handleGoogle}
               className="w-full flex items-center justify-center gap-3 py-3.5 rounded-2xl border-2 border-gray-200 bg-white hover:bg-gray-50 transition-all hover:scale-[1.01] active:scale-95 mb-5 shadow-sm">
@@ -82,6 +102,7 @@ export default function LoginPage() {
               <div className="flex-1 h-px bg-gray-200" />
             </div>
 
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
             <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">📧 Email</label>
@@ -89,6 +110,10 @@ export default function LoginPage() {
                   placeholder="votre@email.com"
                   className="w-full px-4 py-3 rounded-2xl border-2 border-gray-100 bg-gray-50 text-sm focus:outline-none focus:border-[#F4A261] transition" />
               </div>
+<<<<<<< HEAD
+
+=======
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
               <div>
                 <label className="block text-sm font-semibold text-gray-700 mb-2">🔒 Mot de passe</label>
                 <div className="relative">
@@ -97,13 +122,23 @@ export default function LoginPage() {
                     placeholder="••••••••"
                     className="w-full px-4 py-3 rounded-2xl border-2 border-gray-100 bg-gray-50 text-sm focus:outline-none focus:border-[#F4A261] transition pr-12" />
                   <button type="button" onClick={() => setShowPassword(!showPassword)}
+<<<<<<< HEAD
+                    className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 text-sm">
+=======
                     className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 text-sm">
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
                     {showPassword ? "🙈" : "👁️"}
                   </button>
                 </div>
               </div>
+<<<<<<< HEAD
+
+              <button type="submit" disabled={loading}
+                className="w-full py-4 rounded-2xl text-white font-bold text-sm shadow-xl transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-60 mt-2"
+=======
               <button type="submit" disabled={loading}
                 className="w-full py-4 rounded-2xl text-white font-bold text-sm shadow-xl transition-all hover:scale-[1.02] active:scale-95 disabled:opacity-60"
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
                 style={{ background: "linear-gradient(135deg, #F4A261, #e08c4a)" }}>
                 {loading ? (
                   <span className="flex items-center justify-center gap-2">
@@ -119,10 +154,23 @@ export default function LoginPage() {
 
             <p className="text-center text-sm text-gray-500 mt-6">
               Pas encore de compte ?{" "}
+<<<<<<< HEAD
+              <Link to="/register" className="font-bold text-[#1B4332] hover:underline">
+                S'inscrire
+              </Link>
+            </p>
+          </div>
+        </div>
+
+        <p className="text-center text-white/30 text-xs mt-6">
+          WasteSouq · La marketplace marocaine du recyclage
+        </p>
+=======
               <Link to="/register" className="font-bold text-[#1B4332] hover:underline">S'inscrire</Link>
             </p>
           </div>
         </div>
+>>>>>>> 534679146d2bf61e88f96e4a865f5924bc7e3c67
       </div>
     </div>
   );
