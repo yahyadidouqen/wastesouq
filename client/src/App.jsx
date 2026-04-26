@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { AuthProvider } from "./context/AuthContext";
+import PWABanner from "./components/PWABanner";
 import PublishPage from "./pages/PublishPage";
 import BrowsePage from "./pages/BrowsePage";
 import ListingDetailPage from "./pages/ListingDetailPage";
@@ -16,6 +17,7 @@ export default function App() {
   return (
     <AuthProvider>
       <BrowserRouter>
+        <PWABanner />
         <Routes>
           <Route path="/" element={<PublishPage />} />
           <Route path="/annonces" element={<BrowsePage />} />
