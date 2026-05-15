@@ -8,7 +8,10 @@ const passport = require("./config/passport");
 const path = require("path");
 const fs = require("fs");
 
+
 const app = express();
+const compression = require("compression");
+app.use(compression());
 
 app.use(helmet({ crossOriginResourcePolicy: { policy: "cross-origin" } }));
 

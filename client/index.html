@@ -5,6 +5,20 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>WasteSouq — Marketplace du Recyclage</title>
 
+    <!-- Critical CSS inline — affiche quelque chose immédiatement -->
+    <style>
+      *{margin:0;padding:0;box-sizing:border-box}
+      body{font-family:Inter,system-ui,sans-serif;background:linear-gradient(160deg,#0a2e1a 0%,#1B4332 50%,#2d6a4f 100%);min-height:100vh}
+      #root{min-height:100vh}
+      #initial-loader{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;flex-direction:column;gap:16px;background:linear-gradient(160deg,#0a2e1a 0%,#1B4332 50%,#2d6a4f 100%);z-index:9999;transition:opacity 0.3s}
+      #initial-loader-logo{font-size:52px;animation:lp 1.5s ease-in-out infinite}
+      #initial-loader-text{color:rgba(255,255,255,0.7);font-size:13px;font-weight:700;letter-spacing:3px}
+      #initial-loader-bar{width:120px;height:3px;background:rgba(255,255,255,0.15);border-radius:99px;overflow:hidden;margin-top:8px}
+      #initial-loader-bar-inner{height:100%;width:0;background:#F4A261;border-radius:99px;animation:lb 2s ease-in-out infinite}
+      @keyframes lp{0%,100%{transform:scale(1);opacity:1}50%{transform:scale(1.12);opacity:0.75}}
+      @keyframes lb{0%{width:0}60%{width:100%}100%{width:100%;opacity:0}}
+    </style>
+
     <!-- PWA -->
     <link rel="manifest" href="/manifest.json" />
     <meta name="theme-color" content="#1B4332" />
@@ -12,6 +26,13 @@
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
     <meta name="apple-mobile-web-app-title" content="WasteSouq" />
     <link rel="apple-touch-icon" href="/icons/icon-192x192.png" />
+
+    <!-- Fonts — non-blocking -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" media="print" onload="this.media='all'" />
+    <noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" /></noscript>
 
     <!-- SEO -->
     <meta name="description" content="La marketplace marocaine des matières recyclables. Connectez vendeurs et acheteurs de déchets recyclables." />
@@ -27,7 +48,27 @@
     <link rel="icon" type="image/png" href="/icons/icon-96x96.png" />
   </head>
   <body>
-    <div id="root"></div>
+    <!-- Loader visible avant que React charge -->
+    <div id="initial-loader">
+      <div id="initial-loader-logo">♻️</div>
+      <div id="initial-loader-text">WASTESOUQ</div>
+      <div id="initial-loader-bar">
+        <div id="initial-loader-bar-inner"></div>
+      </div>
+    </div>
+
+    <div id="root" role="main"></div>
     <script type="module" src="/src/main.jsx"></script>
+
+    <!-- Cache le loader dès que React est prêt -->
+    <script>
+      window.__hideLoader = function() {
+        var el = document.getElementById('initial-loader');
+        if (el) { el.style.opacity = '0'; setTimeout(function(){ el.remove(); }, 300); }
+      };
+      window.addEventListener('load', function() {
+        setTimeout(window.__hideLoader, 500);
+      });
+    </script>
   </body>
 </html>

@@ -9,19 +9,20 @@ export function usePWA() {
   const [pushEnabled, setPushEnabled] = useState(false);
 
   useEffect(() => {
-    // Register service worker
+    // ✅ Register SW after page load + 2s delay to not block main thread
     if ("serviceWorker" in navigator) {
-      navigator.serviceWorker.register("/sw.js")
-        .then((reg) => {
-          console.log("✅ Service Worker registered:", reg.scope);
-          setPushSupported("PushManager" in window);
-
-          // Check if push is already enabled
-          reg.pushManager.getSubscription().then((sub) => {
-            setPushEnabled(!!sub);
-          });
-        })
-        .catch((err) => console.error("❌ SW registration failed:", err));
+      window.addEventListener("load", () => {
+        setTimeout(() => {
+          navigator.serviceWorker.register("/sw.js")
+            .then((reg) => {
+              setPushSupported("PushManager" in window);
+              reg.pushManager.getSubscription().then((sub) => {
+                setPushEnabled(!!sub);
+              });
+            })
+            .catch((err) => console.error("SW registration failed:", err));
+        }, 2000);
+      });
     }
 
     // Listen for install prompt
@@ -37,7 +38,6 @@ export function usePWA() {
       setIsInstalled(true);
       setIsInstallable(false);
       setDeferredPrompt(null);
-      console.log("✅ PWA installed");
     });
 
     // Online/offline detection
@@ -58,73 +58,44 @@ export function usePWA() {
     };
   }, []);
 
-  // Trigger install prompt
   const installApp = async () => {
     if (!deferredPrompt) return;
     deferredPrompt.prompt();
     const { outcome } = await deferredPrompt.userChoice;
-    console.log("Install outcome:", outcome);
     setDeferredPrompt(null);
     setIsInstallable(false);
   };
 
-  // Enable push notifications
   const enablePush = async () => {
     if (!pushSupported) return false;
     try {
       const permission = await Notification.requestPermission();
       if (permission !== "granted") return false;
-
       const reg = await navigator.serviceWorker.ready;
       const VAPID_PUBLIC_KEY = import.meta.env.VITE_VAPID_PUBLIC_KEY;
-
-      if (!VAPID_PUBLIC_KEY) {
-        console.warn("VAPID public key not set");
-        setPushEnabled(true);
-        return true;
-      }
-
+      if (!VAPID_PUBLIC_KEY) { setPushEnabled(true); return true; }
       const sub = await reg.pushManager.subscribe({
         userVisibleOnly: true,
         applicationServerKey: urlBase64ToUint8Array(VAPID_PUBLIC_KEY),
       });
-
-      // Send subscription to backend
       await fetch("http://localhost:5000/api/push/subscribe", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(sub),
       });
-
       setPushEnabled(true);
       return true;
-    } catch (err) {
-      console.error("Push subscription failed:", err);
-      return false;
-    }
+    } catch { return false; }
   };
 
-  // Disable push notifications
   const disablePush = async () => {
     const reg = await navigator.serviceWorker.ready;
     const sub = await reg.pushManager.getSubscription();
-    if (sub) {
-      await sub.unsubscribe();
-      setPushEnabled(false);
-    }
+    if (sub) { await sub.unsubscribe(); setPushEnabled(false); }
   };
 
-  return {
-    isInstallable,
-    isInstalled,
-    isOnline,
-    pushSupported,
-    pushEnabled,
-    installApp,
-    enablePush,
-    disablePush,
-  };
+  return { isInstallable, isInstalled, isOnline, pushSupported, pushEnabled, installApp, enablePush, disablePush };
 }
 
 function urlBase64ToUint8Array(base64String) {

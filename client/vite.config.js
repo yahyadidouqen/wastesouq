@@ -7,10 +7,12 @@ export default defineConfig({
     port: 5173,
   },
   build: {
+    minify: "terser",
     rollupOptions: {
       output: {
         manualChunks: {
-          vendor: ["react", "react-dom", "react-router-dom"],
+          vendor: ["react", "react-dom"],
+          router: ["react-router-dom"],
           axios: ["axios"],
         },
       },
